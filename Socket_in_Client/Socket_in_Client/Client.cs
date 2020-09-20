@@ -47,7 +47,13 @@ namespace Socket_in_Client
             {
                 if (e.KeyCode == Keys.Enter)
                 {
-                    writer.Write("Client>>" + input_text.Text); // Send to Sever 
+
+                    var input = "Client>>" + input_text.Text;
+                    var password = textBox1.Text;
+                    var result = AesCryptography.EncryptText(input, password);
+                    
+
+                    writer.Write(result); // Send to Sever 
 
                     output_text.Text += "\r\nClient Say:>> " + input_text.Text; 
 
@@ -92,8 +98,11 @@ namespace Socket_in_Client
                         //Reading the message form Server  
 
                         message = reader.ReadString();
-
-                        output_text.Text += "\r\n" + message;
+                        var input = message;
+                        var password = textBox2.Text;
+                        var result = AesCryptography.DecryptText(input, password);
+                        
+                        output_text.Text += "\r\n" + result;
 
                     }
                     catch (Exception e)
@@ -132,82 +141,11 @@ namespace Socket_in_Client
 
         public void send_file()
         {
-            try
-            {
-                openFileDialog1.ShowDialog();
-
-                string mypic_path = openFileDialog1.FileName;
-
-                pictureBox1.Image = Image.FromFile(mypic_path);// view the pciture
-
-                MemoryStream ms = new MemoryStream();// important 
-
-                pictureBox1.Image.Save(ms, pictureBox1.Image.RawFormat); // save the picture in the MemoryStream 
-
-                byte[] arr_img = ms.GetBuffer(); // get byte array by Memory Stream 
-
-                ms.Close();
-
-                //TcpClient client = new TcpClient("localhost", 5000);//connecting to the Server
-
-
-                //NetworkStream myns = client.GetStream(); // Get NetworkStream 
-
-                BinaryWriter bw = new BinaryWriter(output_stream);// 
-
-                bw.Write(arr_img); // send the image(after converting to byte array) to the server that have above Address 
-
-                bw.Close();
-//              myns.Close();
-                client.Close();
-
-            }
-
-            catch (Exception es)
-            {
-                MessageBox.Show(es.Message);
-            }
-
+           
         }
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //send_file();
-
-            try
-            {
-                openFileDialog1.ShowDialog();
-
-                string mypic_path = openFileDialog1.FileName;
-
-                pictureBox1.Image = Image.FromFile(mypic_path);// view the pciture
-
-                MemoryStream ms = new MemoryStream();// important 
-
-                pictureBox1.Image.Save(ms, pictureBox1.Image.RawFormat); // save the picture in the MemoryStream 
-
-                byte[] arr_img = ms.GetBuffer(); // get byte array by Memory Stream 
-
-                ms.Close();
-
-                TcpClient client = new TcpClient(Form1.ip, 5000);//connecting to the Server
-
-                NetworkStream myns = client.GetStream(); // Get NetworkStream 
-
-                BinaryWriter bw = new BinaryWriter(myns);// 
-
-                bw.Write(arr_img); // send the image(after converting to byte array) to the server that have above Address 
-
-                //bw.Close();
-                //myns.Close();
-                //client.Close();
-
-            }
-
-            catch (Exception es)
-            {
-                MessageBox.Show(es.Message);
-            }
-
+            
 
         }
 

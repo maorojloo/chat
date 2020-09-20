@@ -28,6 +28,7 @@ namespace Socket_in_Client
 
             Client cl = new Client();
             cl.Show();
+            this.Hide();
         }
 
         private void Form1_Load(object sender, EventArgs e)
